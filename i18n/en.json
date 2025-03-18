@@ -1,0 +1,40 @@
+{
+  "header": {
+    "title": "Harmonist"
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "blog": "Blog",
+    "settings": "Settings",
+    "cta": "Get Started"
+  },
+  "footer": {
+    "copyright": "2025 Harmonist. All rights reserved."
+  },
+  "home": {
+    "headline": "Discover Music Like Never Before",
+    "description": "Explore the connections between artists and uncover hidden influences.",
+    "cta_button": "Start Exploring"
+  },
+  "settings": {
+    "heading": "Customize Your Experience",
+    "description": "Select your preferred language to personalize your browsing experience.",
+    "language_label": "Choose Language:",
+    "language_en": "English",
+    "language_es": "Español",
+    "save_button": "Save Preferences"
+  },
+  "about": {
+    "title": "About Harmonist",
+    "description": "Harmonist helps you explore the rich history of musical influence, connecting artists and genres in ways you've never seen before."
+  },
+  "blog": {
+    "title": "Our Blog",
+    "description": "Stay updated with the latest insights on music, trends, and hidden gems."
+  },
+  "explore": {
+    "title": "Explore",
+    "description": "Discover the connections between artists and genres."
+  }
+}

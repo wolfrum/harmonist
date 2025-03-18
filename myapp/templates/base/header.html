@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ header.title }}</title>
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <h1>{{ header.title }}</h1>
+        <nav>
+          <ul>
+            <li><a href="{% url 'home' %}">{{ navigation.home }}</a></li>
+            <li><a href="{% url 'about' %}">{{ navigation.about }}</a></li>
+            <li><a href="{% url 'blog' %}">{{ navigation.blog }}</a></li>
+            <li>
+              <a href="{% url 'settings' %}">{{ navigation.settings }}</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+  </body>
+</html>

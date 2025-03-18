@@ -1,0 +1,18 @@
+{% include 'base/header.html' %}
+
+<main class="settings">
+    <h2>{{ settings.heading }}</h2>
+    <p>{{ settings.description }}</p>
+    
+    <form action="{% url 'set_language' %}" method="post">
+        {% csrf_token %}
+        <label for="language">{{ settings.language_label }}</label>
+        <select name="language" id="language">
+            <option value="en" {% if lang == "en" %}selected{% endif %}>{{ settings.language_en }}</option>
+            <option value="es" {% if lang == "es" %}selected{% endif %}>{{ settings.language_es }}</option>
+        </select>
+        <button type="submit">{{ settings.save_button }}</button>
+    </form>
+</main>
+
+{% include 'base/footer.html' %}

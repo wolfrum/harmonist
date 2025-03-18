@@ -1,0 +1,80 @@
+# 🐍 Ignore Python Compiled Files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 📁 Ignore Virtual Environments
+venv/
+.venv/
+.env  # Environment variables
+.env.local
+.env.*.backup  # Backup versions of .env
+*.venv
+
+# 🛠️ Ignore IDE & Editor Settings
+.vscode/
+.idea/
+*.swp
+*.sublime-project
+*.sublime-workspace
+
+# 🔧 Ignore Django & Debugging Files
+*.log
+logs/
+*.pot
+*.mo
+local_settings.py  # If you use local settings
+
+# 🔐 Ignore Environment Variables & Secrets
+.env
+*.key
+config.json
+secrets.json
+
+# 🛢️ Ignore SQLite Databases (for local dev)
+*.sqlite3
+
+# 🛢️ Ignore PostgreSQL Data (for local dev)
+pgdata/
+postgres_data/
+
+# 🚀 Ignore Render / Railway Deployment Files (if applicable)
+render.yaml
+railway.json
+
+# 📦 Ignore Python Dependencies (if using a requirements file)
+Pipfile
+Pipfile.lock
+poetry.lock
+
+# 🔄 Ignore Migrations (optional, but keep in repo if needed)
+# Uncomment below if you want to ignore migrations (not recommended for teams)
+# **/migrations/*.py
+# **/migrations/*.pyc
+
+# 🏗️ Ignore Docker & Airflow Files
+docker-compose.override.yml
+docker-compose.dev.yml
+airflow.cfg
+dags/__pycache__/
+logs/
+
+# 🚀 Ignore Node.js and Frontend Builds (if applicable)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ⚠️ Ignore temporary and swap files
+*.bak
+*.swp
+*.swo
+
+# 🍎 Ignore macOS System Files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# 🐧 Ignore Linux System Files
+*.pid

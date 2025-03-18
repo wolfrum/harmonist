@@ -1,0 +1,13 @@
+{% include 'base/header.html' %}
+
+<main class="hero">
+  <div class="container">
+    <h2>{{ home.headline }}</h2>
+    <p>{{ home.description }}</p>
+    <button onclick="window.location.href='/explore'">
+      {{ home.cta_button }}
+    </button>
+  </div>
+</main>
+
+{% include 'base/footer.html' %}
