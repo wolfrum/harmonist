@@ -67,7 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'myapp.context_processors.json_texts', # Loads the i18n json files
+                'core.context_processors.json_texts', # Loads the i18n json files
             ],
         },
     },
@@ -119,7 +119,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "myapp", "static")]  # Ensure Django knows where to find static files
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "core", "static")]  # Ensure Django knows where to find static files
 
 # Where collected static files are placed
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
