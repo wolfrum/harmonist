@@ -1,0 +1,20 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<h1>Assign Genres to Artists</h1>
+<p>Only artists without genres are shown.</p>
+
+{% for artist in artists %}
+  <form method="post" style="margin-bottom: 2rem;">
+    {% csrf_token %}
+    <input type="hidden" name="artist_id" value="{{ artist.id }}">
+    <strong>{{ artist.name }}</strong><br>
+    <label>Genres (comma separated):</label><br>
+    <input type="text" name="genres" style="width: 400px;" placeholder="e.g. Rock, Punk, Garage"><br>
+    <button type="submit" class="default">Save</button>
+  </form>
+{% empty %}
+  <p>No artists need genre updates.</p>
+{% endfor %}
+{% endblock %}

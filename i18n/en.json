@@ -17,6 +17,13 @@
     "description": "Explore the connections between artists and uncover hidden influences.",
     "cta_button": "Start Exploring"
   },
+  "genres": {
+    "title": "Browse Artists by Genre",
+    "no_genres_found": "No genres found in the database."
+  },
+  "genre_detail": {
+    "no_artists_found": "No artists found in this genre."
+  },
   "settings": {
     "heading": "Customize Your Experience",
     "description": "Select your preferred language to personalize your browsing experience.",

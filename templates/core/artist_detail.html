@@ -1,0 +1,77 @@
+{% include 'base/header.html' %}
+
+<main class="section">
+  <div class="container">
+
+    <h2>{{ artist.name }}</h2>
+
+    {% if artist.image_url %}
+    <img
+      src="{{ artist.image_url }}"
+      alt="{{ artist.name }}"
+      class="artist-image"
+    />
+    {% endif %}
+
+    <h3>Albums</h3>
+    <div class="album-grid">
+      {% for album in albums %}
+      <div class="album-card">
+        <div class="album-content">
+          {% if album.cover_url %}
+            <img src="{{ album.cover_url }}" alt="{{ album.title }} cover" class="album-cover" />
+          {% endif %}
+          <div class="album-details">
+            <h4 class="album-title">{{ album.title }} {% if album.release_year %}({{ album.release_year }}){% endif %}</h4>
+      
+            {% if album.songs.exists %}
+            <ul class="song-list limited">
+              {% for song in album.songs.all|dictsort:"track_number" %}
+              <li class="song-item">
+                <span class="song-title">
+                  {{ song.track_number }}. {{ song.title }}
+                  {% if song.duration_minutes %}
+                  <span class="song-duration">({{ song.duration_minutes }})</span>
+                  {% endif %}
+                </span>
+                {% if song.spotify_id %}
+                <a href="spotify:track:{{ song.spotify_id }}" target="_blank" class="spotify-icon" title="Play on Spotify">
+                  <img src="/static/spotify_black_logo.png" alt="Spotify Logo" class="spotify-logo" />
+                </a>
+                {% endif %}
+              </li>
+              {% endfor %}
+            </ul>
+            <button class="expand-songs" onclick="this.closest('.album-card').classList.toggle('expanded')">
+              View all songs
+            </button>
+            {% else %}
+            <p class="no-songs">No songs found for this album.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <p>No albums found for this artist.</p>
+      {% endfor %}
+    </div>
+  </div>
+</main>
+
+<script>
+  function openSpotify(trackId) {
+    const appUrl = `spotify:track:${trackId}`;
+    const webUrl = `https://open.spotify.com/track/${trackId}`;
+
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = appUrl;
+    document.body.appendChild(iframe);
+
+    setTimeout(() => {
+      window.open(webUrl, '_blank');
+    }, 3000); // fallback after 3 seconds
+  }
+</script>
+
+{% include 'base/footer.html' %}

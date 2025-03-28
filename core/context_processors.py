@@ -17,3 +17,25 @@ def json_texts(request):
     """Context processor to load JSON texts and inject them into all templates."""
     lang = request.COOKIES.get("language", "en")  # Get language from cookies (default: en)
     return load_json_file(lang)
+
+def breadcrumbs_context(request):
+    if hasattr(request, "breadcrumbs"):
+        # Use manually set breadcrumbs from view
+        return {"breadcrumbs": request.breadcrumbs}
+
+    # Fallback: build from path segments
+    path = request.path
+    segments = [segment for segment in path.strip('/').split('/') if segment]
+    breadcrumbs = []
+    url = '/'
+
+    for segment in segments:
+        url += segment + '/'
+        breadcrumbs.append({
+            'label': segment.replace('-', ' ').replace('_', ' ').title(),
+            'url': url
+        })
+
+    return {
+        'breadcrumbs': breadcrumbs
+    }

@@ -1,0 +1,19 @@
+{% include 'base/header.html' %}
+
+<main class="section">
+  <div class="container">
+    <h2>{{ genre }}</h2>
+    <ul class="genre-detail-list">
+      {% for artist in artists %}
+      <li>
+        <a href="{% url 'artist_detail' artist.id %}?from=genre-detail&genre={{ genre_slug }}">
+          {{ artist.name }}
+      </li>
+      {% empty %}
+      <li>{{ genre_detail.no_artists_found }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</main>
+
+{% include 'base/footer.html' %}
