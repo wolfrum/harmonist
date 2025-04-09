@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ header.title }}</title>
     <!-- Main CSS -->
-    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
   </head>
   <body>
     <header>
@@ -15,10 +15,10 @@
         <nav>
           <ul>
             <li><a href="{% url 'home' %}">{{ navigation.home }}</a></li>
+            <li><a href="{% url 'genres' %}">{{ navigation.explore}}</a></li>
             <li><a href="{% url 'about' %}">{{ navigation.about }}</a></li>
             <li><a href="{% url 'blog' %}">{{ navigation.blog }}</a></li>
-            <li>
-              <a href="{% url 'settings' %}">{{ navigation.settings }}</a>
+            <li><a href="{% url 'settings' %}">{{ navigation.settings }}</a>
             </li>
           </ul>
         </nav>

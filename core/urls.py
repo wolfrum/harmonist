@@ -2,7 +2,7 @@ from django.urls import path
 from core.admin import admin_site
 from .views import (
     home_view, settings_view, about_view, blog_view, explore_view, set_language,
-    genres_view, genre_detail_view, artist_detail,
+    genres_view, genre_detail_view, artist_detail, artist_network_data
 )
 
 urlpatterns = [
@@ -15,6 +15,7 @@ urlpatterns = [
     path("genres/", genres_view, name="genres"),
     path('genres/<str:genre>/', genre_detail_view, name='genre_detail'),
     path('artists/<int:artist_id>/', artist_detail, name='artist_detail'),
+    path("api/artist/<int:artist_id>/network/", artist_network_data, name="artist_network_data"),
 
     
 ]

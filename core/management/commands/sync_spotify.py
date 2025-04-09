@@ -2,14 +2,11 @@ import os
 import time
 import logging
 from datetime import datetime, timedelta
-
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from tqdm import tqdm
-
 from core.services.spotify import SpotifyService
 from core.models import Artist, ArtistAlias
-
 
 class Command(BaseCommand):
     help = "Sync one or more artists from Spotify into the database."

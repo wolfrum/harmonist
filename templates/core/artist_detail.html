@@ -1,4 +1,5 @@
 {% include 'base/header.html' %}
+{% load static %}
 
 <main class="section">
   <div class="container">
@@ -13,6 +14,9 @@
     />
     {% endif %}
 
+    {% include 'core/partials/artist_network.html' %}
+
+
     <h3>Albums</h3>
     <div class="album-grid">
       {% for album in albums %}
@@ -26,21 +30,32 @@
       
             {% if album.songs.exists %}
             <ul class="song-list limited">
-              {% for song in album.songs.all|dictsort:"track_number" %}
-              <li class="song-item">
-                <span class="song-title">
-                  {{ song.track_number }}. {{ song.title }}
-                  {% if song.duration_minutes %}
-                  <span class="song-duration">({{ song.duration_minutes }})</span>
+              {% regroup album.songs.all|dictsort:"disc_number" by disc_number as discs %}
+              {% with discs|length as disc_count %}
+
+                {% for disc in discs %}
+                  {% if disc_count > 1 %}
+                    <li class="disc-heading">Disc {{ disc.grouper }}</li>
                   {% endif %}
-                </span>
-                {% if song.spotify_id %}
-                <a href="spotify:track:{{ song.spotify_id }}" target="_blank" class="spotify-icon" title="Play on Spotify">
-                  <img src="/static/spotify_black_logo.png" alt="Spotify Logo" class="spotify-logo" />
-                </a>
-                {% endif %}
-              </li>
-              {% endfor %}
+                  
+                  {% for song in disc.list|dictsort:"track_number" %}
+                    <li class="song-item">
+                      <span class="song-title">
+                        {{ song.track_number }}. {{ song.title }}
+                        {% if song.duration_minutes %}
+                        <span class="song-duration">({{ song.duration_minutes }})</span>
+                        {% endif %}
+                      </span>
+                      {% if song.spotify_id %}
+                      <a href="{{ song.uri }}" target="_blank" class="spotify-icon" title="Play on Spotify">
+                        <img src="/static/images/spotify_black_logo.png" alt="Spotify Logo" class="spotify-logo" />
+                      </a>
+                      {% endif %}
+                    </li>
+                  {% endfor %}
+                {% endfor %}
+
+              {% endwith %}
             </ul>
             <button class="expand-songs" onclick="this.closest('.album-card').classList.toggle('expanded')">
               View all songs
@@ -58,20 +73,12 @@
   </div>
 </main>
 
-<script>
-  function openSpotify(trackId) {
-    const appUrl = `spotify:track:${trackId}`;
-    const webUrl = `https://open.spotify.com/track/${trackId}`;
+{% block extra_scripts %}
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="{% static 'js/spotify_launcher.js' %}"></script>
+  <script src="{% static 'js/artist_network.js' %}"></script>
+  <script src="{% static 'js/toggle_fallback.js' %}"></script>
+{% endblock %}
 
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.src = appUrl;
-    document.body.appendChild(iframe);
-
-    setTimeout(() => {
-      window.open(webUrl, '_blank');
-    }, 3000); // fallback after 3 seconds
-  }
-</script>
 
 {% include 'base/footer.html' %}

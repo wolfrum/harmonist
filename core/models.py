@@ -1,13 +1,19 @@
 from django.db import models
 from datetime import datetime
 
+class Genre(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='subgenres')
+
+    def __str__(self):
+        return self.name
 
 class Artist(models.Model):
     name = models.CharField(max_length=200, db_index=True)
     spotify_id = models.CharField(max_length=100, blank=True, null=True, unique=True)
     popularity = models.IntegerField(null=True, blank=True)
     followers = models.IntegerField(null=True, blank=True)
-    genres = models.JSONField(blank=True, null=True)
+    genres = models.ManyToManyField(Genre, related_name='artists', blank=True)
     image_url = models.URLField(blank=True, null=True)
     uri = models.CharField(max_length=100, blank=True, null=True)
     last_synced_at = models.DateTimeField(blank=True, null=True)
@@ -37,18 +43,6 @@ class Album(models.Model):
                     except ValueError:
                         return None
         return None
-
-
-class Song(models.Model):
-    title = models.CharField(max_length=200)
-    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='songs')
-    spotify_id = models.CharField(max_length=100, blank=True, null=True, unique=True)
-    duration_ms = models.IntegerField(blank=True, null=True)
-    track_number = models.IntegerField(blank=True, null=True)
-
-    def __str__(self):
-        return f"{self.album.title} – {self.title}"  # improved for clarity
-
 
 class ArtistInfluence(models.Model):
     from_artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='influences')
@@ -134,9 +128,11 @@ class Song(models.Model):
     spotify_id = models.CharField(max_length=100, blank=True, null=True, unique=True)
     duration_ms = models.IntegerField(blank=True, null=True)
     track_number = models.IntegerField(blank=True, null=True)
-    uri = models.CharField(max_length=100, blank=True, null=True)  # Spotify URI
-    preview_url = models.URLField(blank=True, null=True)  # 30-second preview
-    external_url = models.URLField(blank=True, null=True)  # Link to open in Spotify
+    disc_number = models.IntegerField(blank=True, null=True)
+    explicit = models.BooleanField(default=False)
+    uri = models.CharField(max_length=100, blank=True, null=True)  
+    preview_url = models.URLField(blank=True, null=True)
+    external_url = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.album.title} – {self.title}"

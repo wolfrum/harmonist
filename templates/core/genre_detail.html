@@ -2,15 +2,35 @@
 
 <main class="section">
   <div class="container">
-    <h2>{{ genre }}</h2>
+    <h2 class="artist-name">{{ genre.name }}</h2>
+
+    {% if genre.parent %}
+      <p><strong>Parent Genre:</strong> 
+        <a href="{% url 'genre_detail' genre=genre.parent.name %}">{{ genre.parent.name }}</a>
+      </p>
+    {% endif %}
+
+    {% if genre.subgenres.exists %}
+      <p><strong>Subgenres:</strong></p>
+      <ul class="genre-detail-list">
+        {% for sub in genre.subgenres.all %}
+          <li>
+            <a href="{% url 'genre_detail' genre=sub.name %}">{{ sub.name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <h3>Artists</h3>
     <ul class="genre-detail-list">
       {% for artist in artists %}
-      <li>
-        <a href="{% url 'artist_detail' artist.id %}?from=genre-detail&genre={{ genre_slug }}">
-          {{ artist.name }}
-      </li>
+        <li>
+          <a href="{% url 'artist_detail' artist.id %}?from=genre-detail&genre={{ genre.name }}">
+            {{ artist.name }}
+          </a>
+        </li>
       {% empty %}
-      <li>{{ genre_detail.no_artists_found }}</li>
+        <li>No artists found for this genre.</li>
       {% endfor %}
     </ul>
   </div>

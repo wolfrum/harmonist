@@ -146,15 +146,6 @@ nav ul li a:hover {
   /* 40px => 2.5rem */
   padding: 2.5rem 0;
 }
-.footer .container {
-  /* 
-    If you want the footer’s contents themselves to be flexible
-    or horizontally centered, you could also do:
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  */
-}
 
 /* --- RESPONSIVE RULES --- */
 @media (max-width: 768px) {
@@ -421,40 +412,6 @@ nav ul li a:hover {
   color: #888;
 }
 
-.breadcrumbs {
-  margin-bottom: 1.5rem;
-  font-size: 0.95rem;
-  text-align: left;
-}
-
-.breadcrumbs ul {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.breadcrumbs li::after {
-  content: '›';
-  margin-left: 0.5rem;
-}
-
-.breadcrumbs li:last-child::after {
-  content: '';
-}
-
-.breadcrumbs a {
-  text-decoration: none;
-  color: #007aff;
-  font-weight: 500;
-}
-
-.breadcrumbs a:hover {
-  text-decoration: underline;
-}
-
 /* --- SEARCH BAR --- */
 .search-bar-wrapper {
   display: flex;
@@ -478,4 +435,153 @@ nav ul li a:hover {
   outline: none;
   border-color: #007aff;
   box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+}
+
+.disc-heading {
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.25rem;
+  color: #333;
+  border-top: 1px solid #ddd;
+  padding-top: 0.75rem;
+}
+
+.artist-network {
+  margin-top: 2rem;
+  background: #fafafa;
+  border: 1px solid #eee;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  list-style-type: none;
+}
+.artist-network h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.artist-network ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.5rem 0;
+}
+
+.artist-network li {
+  margin-bottom: 0.25rem;
+  list-style: none;
+}
+
+.network-title {
+  font-size: 1.5rem;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+#artist-network-graph {
+  height: 420px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  margin: 0 auto 1.5rem auto;
+  max-width: 100%;
+}
+
+.artist-network {
+  margin-top: 2rem;
+}
+
+.network-legend {
+  text-align: center;
+  margin: 0.75rem 0;
+}
+
+.legend-list {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 0;
+  margin: 0;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 0.4rem;
+  vertical-align: middle;
+}
+
+.influence-dot {
+  background-color: #3b82f6; /* Blue */
+}
+
+.listens-dot {
+  background-color: #10b981; /* Green */
+}
+
+.toggle-fallback {
+  margin: 1rem auto 2rem;
+  background: #f5f5f5;
+  color: #4f46e5;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0.4rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.2s ease;
+}
+
+.toggle-fallback:hover {
+  background-color: #e0e7ff;
+}
+
+.network-fallback {
+  margin-top: 1rem;
+  list-style: none;
+}
+
+.network-fallback.hidden {
+  display: none;
+}
+
+.network-fallback ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.5rem 0;
+}
+
+.network-fallback li {
+  margin-bottom: 0.25rem;
+}
+
+.artist-search-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 2rem auto;
+  max-width: 600px;
+  padding: 0 1rem;
+}
+
+.artist-search-input {
+  width: 100%;
+  max-width: 100%;
+  padding: 1rem 1.25rem;
+  font-size: 1.125rem;
+  border: 1px solid #ccc;
+  border-radius: 40px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  font-family: 'Outfit', sans-serif;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.artist-search-input:focus {
+  outline: none;
+  border-color: #007aff;
+  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
 }

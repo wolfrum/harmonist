@@ -5,12 +5,12 @@
   <div class="container">
     <h2>Browse Artists by Genre</h2>
 
-    {% include 'base/artist_search.html' %}
+    {% include 'core/partials/artist_search.html' %}
 
     <div class="genre-grid">
       {% for genre, artist_list in genre_map.items %}
       <div class="genre-card">
-        <h3>{{ genre|title }}</h3>
+        <h3>{{ genre.name|title }}</h3>
         <ul class="scrollable-list">
           {% for artist in artist_list|slice:":8" %}
           <li>
@@ -18,7 +18,7 @@
           </li>
           {% endfor %}
         </ul>
-        <a href="{% url 'genre_detail' genre=genre %}" class="view-all-link">
+        <a href="{% url 'genre_detail' genre=genre.name %}" class="view-all-link">
           View all →
         </a>
       </div>
