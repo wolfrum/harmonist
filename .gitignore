@@ -79,8 +79,5 @@ yarn-error.log*
 # 🐧 Ignore Linux System Files
 *.pid
 
-# Ignore txt and log files
-*.log
-*.txt
-
-/data
+# Ignore log files
+/data/logs/
