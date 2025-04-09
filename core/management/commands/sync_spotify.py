@@ -49,6 +49,7 @@ class Command(BaseCommand):
             return
         
         log_dir = os.path.join("data", "logs")
+        os.makedirs(log_dir, exist_ok=True) 
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         log_filename = os.path.join(log_dir, f"spotify_sync_log_{timestamp}.txt")
