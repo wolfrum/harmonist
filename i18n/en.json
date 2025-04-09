@@ -6,6 +6,7 @@
     "home": "Home",
     "about": "About",
     "blog": "Blog",
+    "explore": "Explore",
     "settings": "Settings",
     "cta": "Get Started"
   },
@@ -16,6 +17,13 @@
     "headline": "Discover Music Like Never Before",
     "description": "Explore the connections between artists and uncover hidden influences.",
     "cta_button": "Start Exploring"
+  },
+  "genres": {
+    "title": "Browse Artists by Genre",
+    "no_genres_found": "No genres found in the database."
+  },
+  "genre_detail": {
+    "no_artists_found": "No artists found in this genre."
   },
   "settings": {
     "heading": "Customize Your Experience",

@@ -1,0 +1,587 @@
+/* 
+  Optionally, you can set the root font-size explicitly:
+  :root {
+    font-size: 16px;
+  }
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+
+/* Base styles */
+body {
+  font-family: 'Outfit', sans-serif;
+  margin: 0;
+  /* 80px => 5rem (assuming 16px = 1rem) */
+  padding-top: 5rem;
+  background-color: #f5f5f5;
+  color: #222;
+  line-height: 1.75;
+}
+
+/* Centered container for layout */
+.container {
+  width: 90%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* --- HEADER --- */
+header {
+  width: 100%;
+  position: fixed; /* fix nav at the top */
+  top: 0;
+  left: 0;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  z-index: 1000;
+}
+
+header .container {
+  /* 20px => 1.25rem */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem;
+}
+
+header h1 {
+  margin: 0;
+  /* 24px => 1.5rem */
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000;
+}
+
+/* Navigation */
+nav ul {
+  list-style: none;
+  display: flex;
+  /* 30px gap => 1.875rem */
+  gap: 1.875rem;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li a {
+  text-decoration: none;
+  /* 16px => 1rem */
+  font-size: 1rem;
+  font-weight: 500;
+  color: #000;
+  transition: color 0.3s ease;
+}
+nav ul li a:hover {
+  color: #007aff;
+}
+
+/* --- HERO SECTION --- */
+.hero {
+  /* 50px => 3.125rem for vertical padding, 20px => 1.25rem horizontally */
+  text-align: center;
+  padding: 3.125rem 1.25rem;
+  color: #000;
+}
+.hero .container {
+  /* optional narrower max-width for text */
+  max-width: 800px;
+}
+
+.hero h2 {
+  /* remains 4rem if that suits your design */
+  font-size: 4rem;
+  margin-bottom: 1.25rem; /* ~20px => 1.25rem */
+  font-weight: 700;
+}
+.hero p {
+  /* 1.5em => 1.5rem for root-based scaling */
+  font-size: 1.5rem;
+  margin: 0 auto 1.25rem auto;
+  opacity: 0.85;
+}
+.hero button {
+  background-color: #222;
+  color: #fff;
+  border: none;
+  /* 18px => 1.125rem vertically, 36px => 2.25rem horizontally */
+  padding: 1.125rem 2.25rem;
+  /* 1.3em => 1.3rem (about 20.8px if root=16px) */
+  font-size: 1.3rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1.25rem; /* ~20px => 1.25rem */
+  border-radius: 50px; /* keep as px or switch to 3.125rem if you want */
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.hero button:hover {
+  background-color: #444;
+  transform: scale(1.05);
+}
+
+/* --- CONTENT SECTIONS --- */
+.section {
+  /* 100px => 6.25rem */
+  padding: 6.25rem 5%;
+  text-align: center;
+}
+.section h2 {
+  /* 2.5rem stays consistent for headings */
+  font-size: 2.5rem;
+  margin-bottom: 1.25rem; /* ~20px => 1.25rem */
+  font-weight: 700;
+}
+.section p {
+  font-size: 1.3rem; /* around 20.8px if root=16px */
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* --- FOOTER --- */
+.footer {
+  background-color: #fff;
+  color: #222;
+  font-size: 1rem;
+  border-top: 1px solid #ddd;
+  text-align: center;
+  /* 40px => 2.5rem */
+  padding: 2.5rem 0;
+}
+
+/* --- RESPONSIVE RULES --- */
+@media (max-width: 768px) {
+  header .container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  nav ul {
+    flex-direction: column;
+    /* 15px => ~0.9375rem */
+    gap: 0.9375rem;
+  }
+
+  /* 150px => 9.375rem vertical padding */
+  .hero {
+    padding: 9.375rem 1.25rem;
+  }
+}
+
+/* --- GENRE GRID --- */
+.genre-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.genre-card {
+  background-color: #fff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.genre-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.genre-card h3 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.genre-card ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.genre-card li {
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+}
+
+.scrollable-list {
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+  scroll-behavior: smooth;
+  margin-bottom: 0.5rem;
+}
+
+.scrollable-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollable-list::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 10px;
+}
+
+.view-all-link {
+  text-align: right;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #007aff;
+  text-decoration: none;
+  margin-top: 1rem;
+  margin-bottom: -0.5rem; /* optional spacing tweak */
+  align-self: flex-end;
+  transition: color 0.3s ease;
+}
+
+.view-all-link:hover {
+  color: #005bb5;
+}
+
+.genre-detail-list {
+  list-style: none;
+  padding-left: 0;
+  font-size: 1.125rem;
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+.genre-detail-list li {
+  margin-bottom: 0.5rem;
+}
+
+.artist-name {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.artist-image {
+  display: block;
+  margin: 0 auto 2rem auto;
+  max-width: 200px;
+  border-radius: 12px;
+}
+
+.album-header {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.album-cover {
+  width: 100%;
+  max-width: 160px;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.album-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden; /* 🔒 hide overflowed song list */
+  position: relative;
+  transition: max-height 0.3s ease;
+}
+
+.album-card.expanded {
+  overflow: visible;
+}
+
+.album-card .song-list.limited {
+  max-height: 300px; /* Only limits songs, not entire card */
+  overflow-y: hidden;
+}
+
+.album-card.expanded .song-list.limited {
+  max-height: none;
+}
+
+.album-content {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.album-cover {
+  width: 160px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.album-details {
+  flex: 1;
+  min-width: 220px;
+}
+
+.album-title {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.song-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  text-align: left; /* 👈 Align all text to the left */
+}
+
+.song-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #eee;
+  font-size: 1rem;
+  text-align: left; /* 👈 Ensures left alignment */
+}
+
+.song-title {
+  flex-grow: 1;
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.song-duration {
+  opacity: 0.6;
+  margin-left: 0.5rem;
+}
+
+.spotify-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.spotify-logo {
+  width: 22px;
+  height: 22px;
+  opacity: 0.85;
+  transition: transform 0.2s ease;
+}
+
+.spotify-logo:hover {
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+.expand-songs {
+  margin-top: 1rem;
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: #007aff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  transition: color 0.2s ease;
+}
+
+.expand-songs:hover {
+  color: #005fcc;
+}
+
+.no-songs {
+  text-align: center;
+  font-style: italic;
+  color: #888;
+}
+
+/* --- SEARCH BAR --- */
+.search-bar-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 420px;
+  padding: 0.9rem 1.2rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 50px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: 'Outfit', sans-serif;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #007aff;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+}
+
+.disc-heading {
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.25rem;
+  color: #333;
+  border-top: 1px solid #ddd;
+  padding-top: 0.75rem;
+}
+
+.artist-network {
+  margin-top: 2rem;
+  background: #fafafa;
+  border: 1px solid #eee;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  list-style-type: none;
+}
+.artist-network h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.artist-network ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.5rem 0;
+}
+
+.artist-network li {
+  margin-bottom: 0.25rem;
+  list-style: none;
+}
+
+.network-title {
+  font-size: 1.5rem;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+#artist-network-graph {
+  height: 420px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  margin: 0 auto 1.5rem auto;
+  max-width: 100%;
+}
+
+.artist-network {
+  margin-top: 2rem;
+}
+
+.network-legend {
+  text-align: center;
+  margin: 0.75rem 0;
+}
+
+.legend-list {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 0;
+  margin: 0;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 0.4rem;
+  vertical-align: middle;
+}
+
+.influence-dot {
+  background-color: #3b82f6; /* Blue */
+}
+
+.listens-dot {
+  background-color: #10b981; /* Green */
+}
+
+.toggle-fallback {
+  margin: 1rem auto 2rem;
+  background: #f5f5f5;
+  color: #4f46e5;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0.4rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.2s ease;
+}
+
+.toggle-fallback:hover {
+  background-color: #e0e7ff;
+}
+
+.network-fallback {
+  margin-top: 1rem;
+  list-style: none;
+}
+
+.network-fallback.hidden {
+  display: none;
+}
+
+.network-fallback ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.5rem 0;
+}
+
+.network-fallback li {
+  margin-bottom: 0.25rem;
+}
+
+.artist-search-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 2rem auto;
+  max-width: 600px;
+  padding: 0 1rem;
+}
+
+.artist-search-input {
+  width: 100%;
+  max-width: 100%;
+  padding: 1rem 1.25rem;
+  font-size: 1.125rem;
+  border: 1px solid #ccc;
+  border-radius: 40px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  font-family: 'Outfit', sans-serif;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.artist-search-input:focus {
+  outline: none;
+  border-color: #007aff;
+  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
+}

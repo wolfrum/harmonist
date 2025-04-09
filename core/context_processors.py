@@ -17,3 +17,4 @@ def json_texts(request):
     """Context processor to load JSON texts and inject them into all templates."""
     lang = request.COOKIES.get("language", "en")  # Get language from cookies (default: en)
     return load_json_file(lang)
+

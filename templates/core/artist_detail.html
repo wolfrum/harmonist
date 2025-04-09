@@ -1,0 +1,84 @@
+{% include 'base/header.html' %}
+{% load static %}
+
+<main class="section">
+  <div class="container">
+
+    <h2>{{ artist.name }}</h2>
+
+    {% if artist.image_url %}
+    <img
+      src="{{ artist.image_url }}"
+      alt="{{ artist.name }}"
+      class="artist-image"
+    />
+    {% endif %}
+
+    {% include 'core/partials/artist_network.html' %}
+
+
+    <h3>Albums</h3>
+    <div class="album-grid">
+      {% for album in albums %}
+      <div class="album-card">
+        <div class="album-content">
+          {% if album.cover_url %}
+            <img src="{{ album.cover_url }}" alt="{{ album.title }} cover" class="album-cover" />
+          {% endif %}
+          <div class="album-details">
+            <h4 class="album-title">{{ album.title }} {% if album.release_year %}({{ album.release_year }}){% endif %}</h4>
+      
+            {% if album.songs.exists %}
+            <ul class="song-list limited">
+              {% regroup album.songs.all|dictsort:"disc_number" by disc_number as discs %}
+              {% with discs|length as disc_count %}
+
+                {% for disc in discs %}
+                  {% if disc_count > 1 %}
+                    <li class="disc-heading">Disc {{ disc.grouper }}</li>
+                  {% endif %}
+                  
+                  {% for song in disc.list|dictsort:"track_number" %}
+                    <li class="song-item">
+                      <span class="song-title">
+                        {{ song.track_number }}. {{ song.title }}
+                        {% if song.duration_minutes %}
+                        <span class="song-duration">({{ song.duration_minutes }})</span>
+                        {% endif %}
+                      </span>
+                      {% if song.spotify_id %}
+                      <a href="{{ song.uri }}" target="_blank" class="spotify-icon" title="Play on Spotify">
+                        <img src="/static/images/spotify_black_logo.png" alt="Spotify Logo" class="spotify-logo" />
+                      </a>
+                      {% endif %}
+                    </li>
+                  {% endfor %}
+                {% endfor %}
+
+              {% endwith %}
+            </ul>
+            <button class="expand-songs" onclick="this.closest('.album-card').classList.toggle('expanded')">
+              View all songs
+            </button>
+            {% else %}
+            <p class="no-songs">No songs found for this album.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <p>No albums found for this artist.</p>
+      {% endfor %}
+    </div>
+  </div>
+</main>
+
+{% block extra_scripts %}
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="{% static 'js/spotify_launcher.js' %}"></script>
+  <script src="{% static 'js/artist_network.js' %}"></script>
+  <script src="{% static 'js/toggle_fallback.js' %}"></script>
+{% endblock %}
+
+
+{% include 'base/footer.html' %}

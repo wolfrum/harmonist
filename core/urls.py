@@ -1,5 +1,9 @@
 from django.urls import path
-from .views import home_view, settings_view, about_view, blog_view, explore_view, set_language
+from core.admin import admin_site
+from .views import (
+    home_view, settings_view, about_view, blog_view, explore_view, set_language,
+    genres_view, genre_detail_view, artist_detail, artist_network_data
+)
 
 urlpatterns = [
     path("", home_view, name="home"),
@@ -8,4 +12,10 @@ urlpatterns = [
     path("blog/", blog_view, name="blog"),
     path("explore/", explore_view, name="explore"),
     path("set-language/", set_language, name="set_language"),
+    path("genres/", genres_view, name="genres"),
+    path('genres/<str:genre>/', genre_detail_view, name='genre_detail'),
+    path('artists/<int:artist_id>/', artist_detail, name='artist_detail'),
+    path("api/artist/<int:artist_id>/network/", artist_network_data, name="artist_network_data"),
+
+    
 ]
