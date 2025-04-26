@@ -1,6 +1,7 @@
-{% include 'base/header.html' %}
+{% extends "base/base.html" %}
 {% load static %}
 
+{% block content %}
 <main class="section">
   <div class="container">
 
@@ -16,8 +17,8 @@
 
     {% include 'core/partials/artist_network.html' %}
 
+    {% include 'components/title.html' with title="Albums" %}
 
-    <h3>Albums</h3>
     <div class="album-grid">
       {% for album in albums %}
       <div class="album-card">
@@ -72,6 +73,7 @@
     </div>
   </div>
 </main>
+{% endblock %}
 
 {% block extra_scripts %}
   <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -80,5 +82,3 @@
   <script src="{% static 'js/toggle_fallback.js' %}"></script>
 {% endblock %}
 
-
-{% include 'base/footer.html' %}

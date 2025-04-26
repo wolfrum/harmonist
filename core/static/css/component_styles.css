@@ -1,0 +1,13 @@
+.component-title {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.component-title__heading {
+  font-size: 1.75rem;
+  font-weight: 700;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 0.25rem;
+  color: #222;
+}

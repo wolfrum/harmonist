@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime
+from django.forms import ValidationError
 
 class Genre(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -20,7 +21,6 @@ class Artist(models.Model):
 
     def __str__(self):
         return self.name
-
 
 class Album(models.Model):
     title = models.CharField(max_length=200)
@@ -44,45 +44,60 @@ class Album(models.Model):
                         return None
         return None
 
-class ArtistInfluence(models.Model):
-    from_artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='influences')
-    to_artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='influenced_by')
+class ArtistConnection(models.Model):
+    CONNECTION_TYPES = [
+        ("influenced_by", "Influenced By"),
+        ("influences", "Influences"),
+        ("listens_to", "Listens To"),
+        ("listened_by", "Listened By"),
+    ]
+
+    from_artist = models.ForeignKey(Artist, related_name="connections_from", on_delete=models.CASCADE)
+    to_artist = models.ForeignKey(Artist, related_name="connections_to", on_delete=models.CASCADE)
+    connection_type = models.CharField(max_length=20, choices=CONNECTION_TYPES)
     note = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ('from_artist', 'to_artist')
+        unique_together = ("from_artist", "to_artist", "connection_type")
 
     def __str__(self):
-        return f"{self.from_artist} influenced {self.to_artist}"
+        return f"{self.from_artist} {self.connection_type} {self.to_artist}"
+    
+class ArtistConnectionSource(models.Model):
+    SOURCE_TYPES = [
+        ("article", "Article"),
+        ("interview", "Interview"),
+        ("podcast", "Podcast"),
+        ("video", "Video"),
+        ("book", "Book"),
+        ("social", "Social Media"),
+        ("other", "Other"),
+    ]
 
-
-class ArtistInfluenceLink(models.Model):
-    influence = models.ForeignKey(ArtistInfluence, on_delete=models.CASCADE, related_name='links')
+    connection = models.ForeignKey(
+        "ArtistConnection",
+        related_name="sources",
+        on_delete=models.CASCADE,
+    )
     url = models.URLField()
+    description = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Optional note about this source (e.g. 'Rolling Stone 2020 interview')"
+    )
+    source_type = models.CharField(
+        max_length=20,
+        choices=SOURCE_TYPES,
+        default="article",
+        help_text="Type of source for this connection"
+    )
+    date_found = models.DateTimeField(auto_now_add=True)
+
 
     def __str__(self):
-        return self.url
-
-
-class ArtistListening(models.Model):
-    listener = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='listens_to')
-    listening_to = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='listened_by')
-    note = models.TextField(blank=True, null=True)
-
-    class Meta:
-        unique_together = ('listener', 'listening_to')
-
-    def __str__(self):
-        return f"{self.listener} listens to {self.listening_to}"
-
-
-class ArtistListeningLink(models.Model):
-    listening = models.ForeignKey(ArtistListening, on_delete=models.CASCADE, related_name='links')
-    url = models.URLField()
-
-    def __str__(self):
-        return self.url
-
+        return f"{self.get_source_type_display()} for {self.connection.from_artist.name} → {self.connection.to_artist.name}"
 
 class ArtistAdminNote(models.Model):
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='admin_notes')

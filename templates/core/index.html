@@ -1,13 +1,21 @@
-{% include 'base/header.html' %}
+{% extends "base/base.html" %}
+{% load static %}
 
-<main class="hero">
-  <div class="container">
-    <h2>{{ home.headline }}</h2>
-    <p>{{ home.description }}</p>
-    <button onclick="window.location.href='/genres'">
-      {{ home.cta_button }}
-    </button>
+{% block title %}Home - Harmonist{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/page_styles/index.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="home-main">
+  <div class="hero">
+    <h2 class="hero-title">Discover Music Differently</h2>
+    <p class="hero-subtitle">
+      Skip the algorithms. Follow the influence.
+    </p>
+    <a href="{% url 'genres' %}" class="hero-cta">Explore Now</a>
   </div>
 </main>
+{% endblock %}
 
-{% include 'base/footer.html' %}

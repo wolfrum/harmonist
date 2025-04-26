@@ -1,8 +1,24 @@
-{% include 'base/header.html' %}
+{% extends "base/base.html" %}
+{% load static %}
 
-<main class="blog">
-  <h2>{{ blog.title }}</h2>
-  <p>{{ blog.description }}</p>
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/page_styles/blog.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="blog container">
+  <section class="blog-content">
+    <h2>Harmonist Blog</h2>
+    <p>
+      Harmonist is a music discovery platform designed to guide you beyond algorithmic recommendations.
+      Instead of suggesting songs based on your past behavior, Harmonist helps you explore the web of artistic
+      influence to discover real-life relationships between musicians that span genres,
+      generations, and geographies.
+    </p>
+
+    <p>
+      Let influence be your compass. Skip the algorithm. Discover music differently.
+    </p>
+  </section>
 </main>
-
-{% include 'base/footer.html' %}
+{% endblock %}

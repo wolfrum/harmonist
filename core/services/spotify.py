@@ -15,7 +15,8 @@ class SpotifyService:
             auth_manager=SpotifyClientCredentials(
                 client_id=os.getenv("SPOTIPY_CLIENT_ID"),
                 client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
-            )
+            ),
+            requests_timeout=20
         )
 
     def search_artist(self, name):

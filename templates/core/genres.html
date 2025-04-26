@@ -1,32 +1,47 @@
+{% extends 'base/base.html' %}
 {% load static %}
-{% include 'base/header.html' %}
 
-<main class="section">
-  <div class="container">
-    <h2>Browse Artists by Genre</h2>
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/page_styles/genres.css' %}">
+{% endblock %}
 
-    {% include 'core/partials/artist_search.html' %}
+{% block content %}
+<main class="genres-main">
 
-    <div class="genre-grid">
-      {% for genre, artist_list in genre_map.items %}
-      <div class="genre-card">
-        <h3>{{ genre.name|title }}</h3>
-        <ul class="scrollable-list">
-          {% for artist in artist_list|slice:":8" %}
-          <li>
-            <a href="{% url 'artist_detail' artist.id %}?from=genres"> {{ artist.name }} </a>
-          </li>
-          {% endfor %}
-        </ul>
-        <a href="{% url 'genre_detail' genre=genre.name %}" class="view-all-link">
-          View all →
-        </a>
-      </div>
-      {% endfor %}
-    </div>
+  <div class="search-container">
+    <input type="text" id="artist-search-input" class="artist-search-input" placeholder="Search artists...">
   </div>
+
+  {% for genre, artists in genre_map.items %}
+    <section class="genre-section">
+      <div class="genre-header">
+        <h2 class="genre-title">
+          {{ genre.name }}
+          <a href="{% url 'genre_detail' genre.name %}" class="view-all-link">View All →</a>
+        </h2>
+      </div>
+    
+      <div class="artist-grid">
+        {% for artist in artists %}
+          <div class="artist-card">
+            <a href="{% url 'artist_detail' artist.id %}">
+              {% if artist.image_url %}
+                <img src="{{ artist.image_url }}" alt="{{ artist.name }}" class="artist-image">
+              {% endif %}
+              <div class="artist-name">{{ artist.name }}</div>
+            </a>
+          </div>
+        {% endfor %}
+        {% if artists|length == 10 %}
+          <div class="more-artists-indicator"><a href="{% url 'genre_detail' genre.name %}">...</a></div>
+        {% endif %}
+      </div>
+    </section>
+  {% endfor %}
+
 </main>
+{% endblock %}
 
+{% block extra_scripts %}
 <script src="{% static 'js/artist_search.js' %}"></script>
-
-{% include 'base/footer.html' %}
+{% endblock %}
