@@ -1,39 +1,47 @@
-{% include 'base/header.html' %}
+{% extends 'base/base.html' %}
+{% load static %}
 
-<main class="section">
-  <div class="container">
-    <h2 class="artist-name">{{ genre.name }}</h2>
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/page_styles/genre_detail.css' %}">
+{% endblock %}
 
-    {% if genre.parent %}
-      <p><strong>Parent Genre:</strong> 
-        <a href="{% url 'genre_detail' genre=genre.parent.name %}">{{ genre.parent.name }}</a>
-      </p>
-    {% endif %}
+{% block content %}
+<main class="genres-main">
 
-    {% if genre.subgenres.exists %}
-      <p><strong>Subgenres:</strong></p>
-      <ul class="genre-detail-list">
-        {% for sub in genre.subgenres.all %}
-          <li>
-            <a href="{% url 'genre_detail' genre=sub.name %}">{{ sub.name }}</a>
-          </li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-
-    <h3>Artists</h3>
-    <ul class="genre-detail-list">
-      {% for artist in artists %}
-        <li>
-          <a href="{% url 'artist_detail' artist.id %}?from=genre-detail&genre={{ genre.name }}">
-            {{ artist.name }}
-          </a>
-        </li>
-      {% empty %}
-        <li>No artists found for this genre.</li>
-      {% endfor %}
-    </ul>
+  <div class="parent-genre-header">
+    Exploring Genres Under: <strong>{{ genre.name }}</strong>
   </div>
-</main>
 
-{% include 'base/footer.html' %}
+  <div class="search-container">
+    <input type="text" id="artist-search-input" class="artist-search-input" placeholder="Search artists...">
+  </div>
+
+  {% for genre_obj, artists in genre_artist_map.items %}
+    <section class="genre-section">
+      <div class="genre-header">
+        <h2 class="genre-title">
+          {{ genre_obj.name }}
+        </h2>
+      </div>
+    
+      <div class="artist-grid">
+        {% for artist in artists %}
+          <div class="artist-card">
+            <a href="{% url 'artist_detail' artist.id %}">
+              {% if artist.image_url %}
+                <img src="{{ artist.image_url }}" alt="{{ artist.name }}" class="artist-image">
+              {% endif %}
+              <div class="artist-name">{{ artist.name }}</div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+  {% endfor %}
+
+</main>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/artist_search.js' %}"></script>
+{% endblock %}

@@ -50,17 +50,51 @@ def genres_view(request):
         "genre_map": sorted_genre_map,
     })
 
+def sort_subgenres_by_followers(subgenres, all_artists):
+    """Sort subgenres by total followers of associated artists (descending)."""
+    subgenre_with_followers = []
+
+    for sub in subgenres:
+        artists_in_sub = all_artists.filter(genres=sub)
+        total_followers = sum(artist.followers or 0 for artist in artists_in_sub)
+
+        if artists_in_sub.exists():
+            subgenre_with_followers.append((sub, total_followers))
+
+    return sorted(subgenre_with_followers, key=lambda x: x[1], reverse=True)
+
 def genre_detail_view(request, genre):
-    """Displays all artists under a genre and its subgenres."""
+    """Display artists grouped by subgenres first, falling back to parent genre if needed."""
     genre = get_object_or_404(Genre, name=unquote(genre))
 
+    # Step 1: Gather subgenres and all related genres
+    subgenres = Genre.objects.filter(parent=genre)
     all_related_genres = Genre.objects.filter(Q(id=genre.id) | Q(parent=genre))
-    artists = Artist.objects.filter(genres__in=all_related_genres).distinct().order_by("name")
+    all_artists = Artist.objects.filter(genres__in=all_related_genres).distinct()
+
+    artist_seen = set()
+    genre_artist_map = {}
+
+    # Step 2: Sort subgenres based on followers
+    sorted_subgenres = sort_subgenres_by_followers(subgenres, all_artists)
+
+    # Step 3: Assign artists to their first matching subgenre
+    for sub, _ in sorted_subgenres:
+        artists_in_subgenre = all_artists.filter(genres=sub).exclude(id__in=artist_seen)
+
+        if artists_in_subgenre.exists():
+            genre_artist_map[sub] = artists_in_subgenre
+            artist_seen.update(artists_in_subgenre.values_list('id', flat=True))
+
+    # Step 4: Assign leftover artists to parent genre
+    parent_artists = all_artists.filter(genres=genre).exclude(id__in=artist_seen)
+
+    if parent_artists.exists():
+        genre_artist_map[genre] = parent_artists
 
     return render(request, "core/genre_detail.html", {
-        "genre": genre.name,
-        "genre_slug": genre.name,
-        "artists": artists,
+        "genre": genre,
+        "genre_artist_map": genre_artist_map,
     })
 
 def artist_detail(request, artist_id):
