@@ -1,0 +1,18 @@
+.blog-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 6rem 1rem 3rem;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #333;
+}
+
+.blog-content h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.blog-content p {
+  margin-bottom: 1.5rem;
+}

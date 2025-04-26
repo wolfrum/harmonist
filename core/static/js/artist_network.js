@@ -17,9 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
         .select(graphEl)
         .append('svg')
         .attr('width', width)
-        .attr('height', height);
+        .attr('height', height)
+        .append('g'); // Group for zoom
 
-      const container = svg.append('g');
       const defs = svg.append('defs');
 
       nodes.forEach((node) => {
@@ -37,19 +37,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      const link = container
+      const link = svg
         .append('g')
+        .attr('class', 'links')
         .selectAll('line')
         .data(links)
         .join('line')
-        .attr('stroke', (d) =>
-          d.type === 'influenced' ? '#3b82f6' : '#10b981'
-        )
+        .attr('stroke', (d) => '#60a5fa')
         .attr('stroke-width', 2)
-        .attr('stroke-opacity', 0.6);
+        .attr('stroke-opacity', 0.4)
+        .on('mouseover', function () {
+          d3.select(this)
+            .transition()
+            .duration(150)
+            .attr('stroke-opacity', 1)
+            .attr('stroke-width', 3);
+        })
+        .on('mouseout', function () {
+          d3.select(this)
+            .transition()
+            .duration(150)
+            .attr('stroke-opacity', 0.4)
+            .attr('stroke-width', 2);
+        })
+        .on('click', (event, d) => {
+          if (d.url) window.open(d.url, '_blank');
+        });
 
-      const node = container
+      const node = svg
         .append('g')
+        .attr('class', 'nodes')
         .selectAll('circle')
         .data(nodes)
         .join('circle')
@@ -60,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .style('cursor', 'pointer')
         .on('click', (event, d) => (window.location.href = d.url));
 
-      const label = container
+      const label = svg
         .append('g')
         .selectAll('text')
         .data(nodes)
@@ -68,8 +85,15 @@ document.addEventListener('DOMContentLoaded', () => {
         .text((d) => d.label)
         .attr('font-size', 12)
         .attr('text-anchor', 'middle')
+        .attr('dy', 34) // more spacing
         .attr('fill', '#111')
         .style('pointer-events', 'none');
+
+      const container = d3.select(graphEl).select('svg');
+      const zoom = d3.zoom().on('zoom', (event) => {
+        svg.attr('transform', event.transform);
+      });
+      container.call(zoom);
 
       const simulation = d3
         .forceSimulation(nodes)
@@ -82,31 +106,18 @@ document.addEventListener('DOMContentLoaded', () => {
         )
         .force('charge', d3.forceManyBody().strength(-300))
         .force('center', d3.forceCenter(width / 2, height / 2))
-        .stop();
+        .on('tick', () => {
+          link
+            .attr('x1', (d) => d.source.x)
+            .attr('y1', (d) => d.source.y)
+            .attr('x2', (d) => d.target.x)
+            .attr('y2', (d) => d.target.y);
+          node.attr('cx', (d) => d.x).attr('cy', (d) => d.y);
+          label.attr('x', (d) => d.x).attr('y', (d) => d.y);
+        });
 
-      // Manually step the simulation forward a few ticks for initial layout
-      for (let i = 0; i < 50; i++) simulation.tick();
-
-      // Position DOM elements once
-      link
-        .attr('x1', (d) => d.source.x)
-        .attr('y1', (d) => d.source.y)
-        .attr('x2', (d) => d.target.x)
-        .attr('y2', (d) => d.target.y);
-
-      node.attr('cx', (d) => d.x).attr('cy', (d) => d.y);
-      label.attr('x', (d) => d.x).attr('y', (d) => d.y + 1.5 * 23);
-
-      // Setup zoom
-      const zoom = d3
-        .zoom()
-        .on('zoom', (event) => container.attr('transform', event.transform));
-      svg.call(zoom);
-
-      // Immediately fit the graph to center
-      function zoomToFit() {
-        if (!nodes.length) return;
-
+      // ✅ Apply zoom after a short delay
+      setTimeout(() => {
         const allX = nodes.map((d) => d.x);
         const allY = nodes.map((d) => d.y);
         const minX = Math.min(...allX);
@@ -115,34 +126,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const maxY = Math.max(...allY);
 
         const padding = 100;
-        const boxWidth = Math.max(maxX - minX, 1);
-        const boxHeight = Math.max(maxY - minY, 1);
+        const graphWidth = Math.max(maxX - minX, 1);
+        const graphHeight = Math.max(maxY - minY, 1);
 
         const scale = Math.min(
-          (width - padding) / boxWidth,
-          (height - padding) / boxHeight,
+          width / (graphWidth + padding),
+          height / (graphHeight + padding),
           2
         );
+        const translateX = width / 2 - (scale * (minX + maxX)) / 2;
+        const translateY = height / 2 - (scale * (minY + maxY)) / 2;
 
-        const centerX = (minX + maxX) / 2;
-        const centerY = (minY + maxY) / 2;
-
-        const translateX = width / 2 - scale * centerX;
-        const translateY = height / 2 - scale * centerY;
-
-        const transform = d3.zoomIdentity
-          .translate(translateX, translateY)
-          .scale(scale);
-        svg
+        container
           .transition()
           .duration(400)
-          .ease(d3.easeCubicOut)
-          .call(zoom.transform, transform);
-      }
-
-      // Delay before zoom to allow DOM paint
-      setTimeout(() => {
-        zoomToFit();
-      }, 500);
+          .call(
+            zoom.transform,
+            d3.zoomIdentity.translate(translateX, translateY).scale(scale)
+          );
+      }, 200); // 🧠 Runs faster but still smooth
     });
 });

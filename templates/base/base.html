@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="{{ lang|default:'en' }}">
+  <head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ header.title|default:"Harmonist" }}</title>
+    <link rel="stylesheet" href="{% static 'css/global_styles.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/component_styles.css' %}" />
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body>
+    <div class="layout-wrapper">
+      {% include 'base/header.html' %}
+      <main class="main-content">
+        {% block content %}{% endblock %}
+      </main>
+      {% include 'base/footer.html' %}
+    </div>
+    {% block extra_scripts %}{% endblock %}
+  </body>
+</html>

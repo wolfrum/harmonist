@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
-from core.models import Artist, Genre
+from django.db.models import Q
+from core.models import Artist, ArtistConnection, Genre
 from urllib.parse import unquote
 
 def home_view(request):
@@ -20,49 +21,81 @@ def explore_view(request):
     return render(request, "core/explore.html")
 
 def genres_view(request):
+    # Get all parent genres
+    parent_genres = Genre.objects.filter(parent__isnull=True).order_by("name")
+
     genre_map = {}
 
-    for genre in Genre.objects.prefetch_related('artists'):
-        artists = genre.artists.order_by('-popularity')
-        genre_map[genre] = artists
+    for parent in parent_genres:
+        # Include the parent genre and its subgenres
+        related_genres = Genre.objects.filter(Q(id=parent.id) | Q(parent=parent))
+        artists = (
+            Artist.objects.filter(genres__in=related_genres)
+            .distinct()
+            .order_by("-followers")[:10] 
+        )
 
-    # 🔥 Sort genres by total popularity of their artists
-    sorted_genre_items = sorted(
-        genre_map.items(),
-        key=lambda item: sum(artist.followers or 0 for artist in item[1]),
-        reverse=True,
+        if artists.exists():
+            genre_map[parent] = artists
+
+    sorted_genre_map = dict(
+        sorted(
+            genre_map.items(),
+            key=lambda item: sum(artist.followers or 0 for artist in item[1]),
+            reverse=True,
+        )
     )
-
-    return render(request, 'core/genres.html', {
-        'genre_map': dict(sorted_genre_items),
+    
+    return render(request, "core/genres.html", {
+        "genre_map": sorted_genre_map,
     })
 
 def genre_detail_view(request, genre):
+    """Displays all artists under a genre and its subgenres."""
     genre = get_object_or_404(Genre, name=unquote(genre))
-    artists = genre.artists.order_by('name')
 
-    return render(request, 'core/genre_detail.html', {
-        'genre': genre.name,
-        'genre_slug': genre.name,
-        'artists': artists,
+    all_related_genres = Genre.objects.filter(Q(id=genre.id) | Q(parent=genre))
+    artists = Artist.objects.filter(genres__in=all_related_genres).distinct().order_by("name")
+
+    return render(request, "core/genre_detail.html", {
+        "genre": genre.name,
+        "genre_slug": genre.name,
+        "artists": artists,
     })
 
 def artist_detail(request, artist_id):
-    artist = get_object_or_404(Artist, id=artist_id)
-    albums = artist.albums.prefetch_related("songs").all()
+    artist = get_object_or_404(Artist, pk=artist_id)
 
-    return render(request, "core/artist_detail.html", {
+    connections = ArtistConnection.objects.filter(
+        Q(from_artist=artist) | Q(to_artist=artist)
+    ).select_related("from_artist", "to_artist").prefetch_related("sources")
+
+    # Flatten the connection view for fallback rendering
+    display_connections = []
+    for conn in connections:
+        if conn.from_artist == artist:
+            other = conn.to_artist
+        else:
+            other = conn.from_artist
+
+        display_connections.append({
+            "other": other,
+            "connection_type": conn.get_connection_type_display(),
+            "sources": conn.sources.all(),
+        })
+
+    albums = artist.albums.prefetch_related("songs")
+
+    context = {
         "artist": artist,
         "albums": albums,
-    })
+        "connections": connections,  # for JS rendering
+        "display_connections": display_connections,  # for fallback HTML
+    }
+    return render(request, "core/artist_detail.html", context)
 
 def artist_network_data(request, artist_id):
-    artist = Artist.objects.get(id=artist_id)
-
-    influences = artist.influences.select_related('to_artist')
-    influenced_by = artist.influenced_by.select_related('from_artist')
-    listens_to = artist.listens_to.select_related('listening_to')
-    listened_by = artist.listened_by.select_related('listener')
+    artist = get_object_or_404(Artist, id=artist_id)
 
     def artist_node(a):
         return {
@@ -75,28 +108,29 @@ def artist_network_data(request, artist_id):
     nodes = {artist.id: artist_node(artist)}
     links = []
 
-    for rel in influences:
-        nodes[rel.to_artist.id] = artist_node(rel.to_artist)
-        links.append({"source": artist.id, "target": rel.to_artist.id, "type": "influenced"})
+    # ✅ Also prefetch sources here (future-proofing if you want to show all URLs)
+    connections = ArtistConnection.objects.filter(
+        Q(from_artist=artist) | Q(to_artist=artist)
+    ).select_related("from_artist", "to_artist").prefetch_related("sources")
 
-    for rel in influenced_by:
-        nodes[rel.from_artist.id] = artist_node(rel.from_artist)
-        links.append({"source": rel.from_artist.id, "target": artist.id, "type": "influenced"})
+    for conn in connections:
+        nodes[conn.from_artist.id] = artist_node(conn.from_artist)
+        nodes[conn.to_artist.id] = artist_node(conn.to_artist)
 
-    for rel in listens_to:
-        nodes[rel.listening_to.id] = artist_node(rel.listening_to)
-        links.append({"source": artist.id, "target": rel.listening_to.id, "type": "listens_to"})
+        # For now, we still use only one hyperlink for D3; update later if needed
+        first_url = conn.sources.first().url if conn.sources.exists() else ""
 
-    for rel in listened_by:
-        nodes[rel.listener.id] = artist_node(rel.listener)
-        links.append({"source": rel.listener.id, "target": artist.id, "type": "listens_to"})
+        links.append({
+            "source": conn.from_artist.id,
+            "target": conn.to_artist.id,
+            "type": conn.connection_type,
+            "url": first_url,
+        })
 
     return JsonResponse({
         "nodes": list(nodes.values()),
         "links": links,
     })
-
-
 
 def set_language(request):
     """Handles language selection from the settings page."""

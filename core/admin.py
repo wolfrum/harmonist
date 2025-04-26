@@ -3,7 +3,7 @@ from django.urls import path
 from django.utils.html import format_html
 from django.shortcuts import render, redirect
 from django.db.models import Q
-from core.models import Artist, Genre, Album, Song, ArtistInfluenceLink, ArtistInfluence
+from core.models import Artist, ArtistConnection, ArtistConnectionSource, Genre, Album, Song
 
 class HarmonistAdminSite(admin.AdminSite):
     site_header = "Harmonist Admin"
@@ -31,17 +31,15 @@ class HarmonistAdminSite(admin.AdminSite):
         return render(request, "admin/genre_cleanup.html", {
             "artists": artists,
         })
-
-# Custom inlines and admin classes
-class ArtistInfluenceLinkInline(admin.TabularInline):
-    model = ArtistInfluenceLink
+    
+class ArtistConnectionSourceInline(admin.TabularInline):
+    model = ArtistConnectionSource
     extra = 1
 
-class ArtistInfluenceAdmin(admin.ModelAdmin):
-    list_display = ("from_artist", "to_artist", "note")
-    search_fields = ("from_artist__name", "to_artist__name", "note")
-    autocomplete_fields = ["from_artist", "to_artist"]
-    inlines = [ArtistInfluenceLinkInline]
+class ArtistConnectionAdmin(admin.ModelAdmin):
+    list_display = ("from_artist", "connection_type", "to_artist")
+    inlines = [ArtistConnectionSourceInline]
+    autocomplete_fields = ("from_artist", "to_artist")
 
 class ArtistAdmin(admin.ModelAdmin):
     search_fields = ["name"]
@@ -57,8 +55,8 @@ class GenreAdmin(admin.ModelAdmin):
 admin_site = HarmonistAdminSite(name='harmonist_admin')
 
 # Register your models
-admin_site.register(ArtistInfluence, ArtistInfluenceAdmin)
 admin_site.register(Artist, ArtistAdmin)
+admin_site.register(ArtistConnection, ArtistConnectionAdmin)
 admin_site.register(Genre, GenreAdmin)
 admin_site.register(Album)
 admin_site.register(Song)

@@ -25,7 +25,7 @@ class Command(BaseCommand):
         parser.add_argument(
             '--sleep',
             type=float,
-            default=0.5,
+            default=1,
             help='Sleep time (in seconds) between requests to avoid rate limiting',
         )
 
@@ -86,17 +86,26 @@ class Command(BaseCommand):
             self.stdout.write(self.style.NOTICE(f"🔍 Searching for: {name}"))
             logging.info(f"Searching: {name}")
 
-            spotify_artist = service.search_artist(name)
-            if not spotify_artist:
-                msg = f"❌ Artist not found: {name}"
-                self.stderr.write(self.style.WARNING(msg))
-                logging.warning(msg)
+            try:
+                spotify_artist = service.search_artist(name)
+                if not spotify_artist:
+                    msg = f"❌ Artist not found: {name}"
+                    self.stderr.write(self.style.WARNING(msg))
+                    logging.warning(msg)
+                    continue
+
+                artist_obj = service.save_artist_and_albums(spotify_artist, imported_as=name)
+                msg = f"✅ Synced: {artist_obj.name}"
+                self.stdout.write(self.style.SUCCESS(msg))
+                logging.info(msg)
+
+            except Exception as e:
+                # Gracefully handle Spotify API errors like timeouts
+                msg = f"⚠️ Error syncing {name}: {str(e)}"
+                self.stderr.write(self.style.ERROR(msg))
+                logging.error(msg)
                 continue
 
-            artist_obj = service.save_artist_and_albums(spotify_artist, imported_as=name)
-            msg = f"✅ Synced: {artist_obj.name}"
-            self.stdout.write(self.style.SUCCESS(msg))
-            logging.info(msg)
 
             time.sleep(options['sleep'])
 

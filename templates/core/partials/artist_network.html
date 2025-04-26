@@ -1,62 +1,36 @@
 <h3 class="network-title">Connections</h3>
 
-<!-- D3 Graph -->
+<!-- 🎯 D3 Graph -->
 <div id="artist-network-graph" data-artist-id="{{ artist.id }}"></div>
 
-<!-- Legend -->
-<div class="network-legend">
-  <ul class="legend-list">
-    <li><span class="legend-dot influence-dot"></span>Influence</li>
-    <li><span class="legend-dot listens-dot"></span>Listens To</li>
-  </ul>
-</div>
-
-<!-- Toggle fallback -->
+<!-- 🌈 Toggle fallback -->
 <button id="toggle-connections" class="toggle-fallback">Show all connections</button>
 
-<!-- Fallback list of connections (initially hidden by JS) -->
+<!-- ♿ Fallback list of connections -->
 <div id="network-fallback" class="network-fallback hidden">
-  {% if artist.influences.exists %}
-    <div>
-      <strong>{{ artist.name }} is Influenced By:</strong>
-      <ul>
-        {% for influence in artist.influences.all %}
-          <li><a href="{% url 'artist_detail' influence.to_artist.id %}">{{ influence.to_artist.name }}</a></li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
-
-  {% if artist.influenced_by.exists %}
-    <div>
-      <strong>Influenced By {{ artist.name }}:</strong>
-      <ul>
-        {% for influence in artist.influenced_by.all %}
-          <li><a href="{% url 'artist_detail' influence.from_artist.id %}">{{ influence.from_artist.name }}</a></li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
-
-  {% if artist.listens_to.exists %}
-    <div>
-      <strong>{{ artist.name }} listens to:</strong>
-      <ul>
-        {% for l in artist.listens_to.all %}
-          <li><a href="{% url 'artist_detail' l.listening_to.id %}">{{ l.listening_to.name }}</a></li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
-
-  {% if artist.listened_by.exists %}
-    <div>
-      <strong>Listens to {{ artist.name }}:</strong>
-      <ul>
-        {% for l in artist.listened_by.all %}
-          <li><a href="{% url 'artist_detail' l.listener.id %}">{{ l.listener.name }}</a></li>
-        {% endfor %}
-      </ul>
-    </div>
+  {% if display_connections %}
+    <ul class="connection-list">
+      {% for item in display_connections %}
+        <li>
+          <a href="{% url 'artist_detail' item.other.id %}">{{ item.other.name }}</a>
+          {% if item.sources %}
+            <ul class="connection-links">
+              {% for source in item.sources %}
+                <li>
+                  🔗 &nbsp<a href="{{ source.url }}" target="_blank" rel="noopener">
+                    {{ source.get_source_type_display|default:"source" }}
+                  </a>
+                  {% if source.description %}
+                    — {{ source.description }}
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No connections found for this artist.</p>
   {% endif %}
 </div>

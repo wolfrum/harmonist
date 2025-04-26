@@ -53,12 +53,6 @@ poetry.lock
 # **/migrations/*.py
 # **/migrations/*.pyc
 
-# 🏗️ Ignore Docker & Airflow Files
-docker-compose.override.yml
-docker-compose.dev.yml
-airflow.cfg
-dags/__pycache__/
-logs/
 
 # 🚀 Ignore Node.js and Frontend Builds (if applicable)
 node_modules/
@@ -81,3 +75,6 @@ yarn-error.log*
 
 # Ignore log files
 /data/logs/
+
+# Ignore scripts for maintenance and development
+/dev_scripts
