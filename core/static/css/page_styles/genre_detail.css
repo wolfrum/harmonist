@@ -1,0 +1,25 @@
+@import url('genres.css');
+
+/* You can override or add extra styles here if needed */
+
+.genre-title {
+  font-size: 1.8rem;
+  text-transform: capitalize;
+  color: #111;
+}
+
+.artist-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.parent-genre-header {
+  font-size: 1.25rem;
+  text-align: center;
+  margin: 2rem auto;
+  color: #555;
+}
+
+.parent-genre-header strong {
+  color: #222;
+}

@@ -78,3 +78,6 @@ yarn-error.log*
 
 # Ignore scripts for maintenance and development
 /dev_scripts
+
+# Ignore artist connections
+data/artist_connections/
